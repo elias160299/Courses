@@ -29,7 +29,7 @@ void main (void){
 			- Valores: parametros que le pasamos al hilo tiene que ser (void *) y ademas le agragamos &
 	*/
 	for(int i=0;i<numero_de_hilos;i++)
-		pthread_create(&hilos[0],NULL,Funcion_Hilo,(void *)(&i) );
+		pthread_create(&hilos[i],NULL,Funcion_Hilo,(void *)(&i) );
 
 	/*
 		Para esperar a que se terminen de ejecutar los hilos, utilizamos la siguiente funcion:

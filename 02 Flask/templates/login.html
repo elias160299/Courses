@@ -1,0 +1,138 @@
+{% extends "Base_Index.html" %}
+{% block title %}.: Login :.{% endblock %}
+
+{% block content %}
+			<!-- Sweet Alert CSS -->
+	    <link rel="stylesheet" href="{{ url_for('static',filename='css/sweetalert1.css') }}">	    	   
+
+	    <!-- Sweet Alert JS -->
+	    <script src="{{ url_for('static',filename='js/sweetalert.min1.js') }}"></script>
+	    
+	    <!-- jQuery -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	    <script>window.jQuery || document.write('<script src="{{ url_for('static',filename='js/jquery-2.2.0.min.js') }}"><\/script>')</script>
+
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/login.css') }}">		
+		<script>
+		$(document).ready(function() {
+    		$(".button-collapse").sideNav(); //Menu del Header
+
+    		$('ul.tabs').tabs(); //Menu
+
+    		$('.parallax').parallax(); //Efecto Parallax
+
+    		var options = [ 			
+				{selector: '#SeccionLogin', offset: 455, callback: function() { Materialize.showStaggeredList("#SeccionLogin"); } }
+			]; //Variable para la siguiente opcion	
+
+			Materialize.scrollFire(options); //Efecto para aparecer derrepente las cosas
+
+			$('.scrollspy').scrollSpy(); //Transicion a los elementos de forma fluida
+
+			$('.modal-trigger').leanModal({ //Ventanas Modales (Las que aparecen derrepente :v)
+			      dismissible: true, // Afecto
+			      opacity: .7, // Opacidad de fondo
+			      in_duration: 300, // Duracion de la transicion al abrir
+			      out_duration: 250, // Duracion de la transicion al cerrar
+			    }
+			);
+
+	    	Materialize.updateTextFields();
+	    	$('select').material_select();
+	    	$('input#input_text, textarea#textarea1').characterCounter();
+
+	  		$('.datepicker').pickadate({
+			    selectMonths: true, // Creates a dropdown to control month
+			    selectYears: 15 // Creates a dropdown of 15 years to control year
+			});
+
+			$('.tooltipped').tooltip({delay: 50});//Mensajito en hover del boton
+
+			$('.materialboxed').materialbox();//Efecto zoom de imagenes					
+
+  		});
+  		function traeValores(formulario){
+  			// swal("Normal");   			
+  			$("form").submit(function(e){//entro en la funcion submit
+                e.preventDefault();//Desactivo el envio automatico
+                swal({
+                    title: "Inicio de sesion",
+                    text: "El usuario:  "+formulario.usuario.value+ "  ¿Es correcto?",
+                    type: "warning", //Logo de cuidado :v
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B5F",
+                    confirmButtonText: "Si, entrar",
+                    cancelButtonText: "Cancelar",
+                    closeOnConfirm: false
+                    },
+                    function(){
+                        // formulario.submit();
+                        $.ajax({
+                                url: '/login',                                
+                                type: 'POST',
+                                data: {
+                                    usuario: formulario.usuario.value,
+                                    clave: formulario.clave.value                                    
+                                },
+                                cache:false,
+                                success: function(response){
+                                	if(response=="Administrador"){
+                                		swal({
+                                            title: "Bienvenid@",
+                                            text: response,
+                                            type: "success"
+                                        },
+                                        function(){
+                                            setTimeout(function(){location.href ="/adm0";},350);//Esperamos 0.35s para recargar la pagina
+                                        });
+                                	}else if(response=="Cliente"){
+                                		swal({
+                                            title: "Bienvenid@",
+                                            text: response,
+                                            type: "success"
+                                        },
+                                        function(){
+                                            setTimeout(function(){location.href ="/usr0";},350);//Esperamos 0.35s para recargar la pagina
+                                        });
+                                	}else if(response=="Invalido"){
+                                		swal("Credenciales invalidas",response,"error"); 
+                                	}
+                                }
+                            })
+                    }
+                );
+                
+            });
+  		}
+	</script>
+		<!-- Empieza SeccionLogin -->
+		<div class="section seccion login">
+			<div style="margin-top: 2%;">
+				<!-- <form method ="POST" action="alumno.html"> -->
+					<form method ="POST" action="/login">
+						<h2> Ingresar </h2>
+						<div class="row">
+							<div class="input-field col s11 blue-text">
+								<i class="material-icons prefix">account_circle</i>
+								<input id="usuario" name="usuario" type="text" class="validate" length="64" maxlength="64" required >
+								<label for="usuario">&#128588; Nombre de Usuario</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="input-field col s11 blue-text">
+								<i class="material-icons prefix">lock</i>
+								<input id="clave" name="clave" type="password" class="validate" length="64" maxlength="64" required>
+								<label for="clave">&#128273; Contraseña</label>
+							</div>
+						</div>
+						
+						<div class="col s12  center"> 
+							<button class="btn-large pink darken-4 waves-effect waves-light" type="submit" id="enviar" name="enviar" value="Ingresar"  onclick="traeValores(this.form)">Acceder <i class="material-icons right">vpn_key</i></button>
+						</div>					
+					</form>
+				</div><br><br>
+				<center><div class="center btn-large blue darken-4 waves-effect waves-light">
+					<a href="/regPublic" class="link">Crear cuenta</a>
+				</div></center>
+			</div>
+{% endblock %}

@@ -6,7 +6,8 @@
 	<title>{% block title %}{% endblock %}</title>
     <link rel="shortcut icon" href="{{ url_for('static',filename='img/lv.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static',filename='img/lv.ico') }}" type="image/x-icon">
-    
+    {% block css %} {% endblock %}
+    {% block js %} {% endblock %}
      <!-- Normalize CSS -->
 	<link rel="stylesheet" href="{{ url_for('static',filename='css/normalize1.css') }}">
     
@@ -40,6 +41,7 @@
     
     <!-- MaterialDark JS -->
     <script src="{{ url_for('static',filename='js/main1.js') }}"></script>
+    
 </head>
 
 <body oncopy="return false">
@@ -75,7 +77,7 @@
                     <li class="NavLateralDivider"></li>
 
                     <li>
-                        <a href="/adm0" class="waves-effect waves-light"><i class="zmdi zmdi-swap-vertical-circle zmdi-hc-fw"></i> Opciones Red</a>
+                        <a href="/adm0" class="waves-effect waves-light"><i class="zmdi zmdi-swap-vertical-circle zmdi-hc-fw"></i> Escanear Red</a>
                     </li>
                     <li class="NavLateralDivider"></li>
 
@@ -113,7 +115,7 @@
 
                 <a href="#" class="hola">
                 <li style="margin-top: 10px; margin-right: 10px;"><figure><img src="{{ url_for('static',filename='img/usr2.png') }}" alt="UserImage"></figure></li>
-                <li class="hola" style="padding:0 5px; margin-top: 10px;">{{nombrecito}}</li>
+                <li class="hola" style="padding:0 5px; margin-top: 10px;">Nombre de la persona</li>
             	</a>             
 
                 <li style="margin-top: 10px; margin-right: 20px;"><a href="#" class="tooltipped waves-effect waves-light btn-ExitSystem" data-position="bottom" data-delay="50" data-tooltip="Cerrar Sesión"><i class="zmdi zmdi-power"></i></a></li>
@@ -138,6 +140,7 @@
         <!-- Area de Mensajes que Llegan -->
         <section class="z-depth-3 NotificationArea">
             <div class="full-width center-align NotificationArea-title">Notificaciones <i class="zmdi zmdi-close btn-Notification"></i></div>
+
             {% if numAlertas==0 %}
             <a class="waves-effect Notification">                
                 <div class="Notification-text">
@@ -160,8 +163,6 @@
                 </div>
             </a>                    
             {% endif %}
-            
-
             
         </section>
         <!-- Termina Area de Mensajes  -->

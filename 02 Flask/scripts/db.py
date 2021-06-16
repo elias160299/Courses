@@ -475,8 +475,8 @@ def set_alertas_visto(conexion,email):
 # respuesta = consul_alertas(conexion,'elias@alumno.com')
 # for i in respuesta:
 # 	print(i)
-
-# print(regis_alerta(conexion,3,'elias@alumno.com','hola soy otra alerta xD'))
+# conexion = conecta_db("Proyecto.db")
+# print(regis_alerta(conexion,4,'elias@alumno.com','ALERTA PRUEBA COMO NO'))
 # crea_tbs(conexion)
 # lista = [1,'R1','SO','Localidad','Encargado','Contacto','Tiempo Activo','Tiempo Ultima Modificacion']
 # print(alta_disp(conexion,lista))

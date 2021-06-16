@@ -29,11 +29,13 @@ def login():
 			session["usr"] = usr			
 			session["idTipoUsr"] = 1
 			session["nom"] = regresa_nombre(conexion,usr)
+			session["email"] = regresa_email(conexion,usr)
 			return respuesta			
 		if respuesta == "Cliente":
 			session["usr"] = usr
 			session["idTipoUsr"] = 2
 			session["nom"] = regresa_nombre(conexion,usr)
+			session["email"] = regresa_email(conexion,usr)
 			return respuesta
 		if respuesta == "Invalido":
 			return respuesta
@@ -65,13 +67,31 @@ def adm0():
 		if(usr!=1):
 			return redirect(url_for("login"))
 		else:
-			pass
-
+			if request.method == 'POST':
+				opc=request.form['opc']
+				if(opc=='1'):
+					# Volver a escanear
+					print("Volver a escanear")
+					pass
+				elif(opc=='2'):
+					# RIP
+					print("RIP")
+					pass
+				elif(opc=='3'):
+					# OSPF
+					print("OSPF")
+					pass
+				elif(opc=='4'):
+					# EIGRP
+					print("EIGRP")
+					pass
+			conexion = conecta_db("Proyecto.db")
+			numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+			return render_template('Adm0.html',nombrecito=session["nom"],numAlertas=numalertas[0])
 
 	except Exception as e:
-		return redirect(url_for("login"))
-
-	return render_template('Adm0.html',nombrecito=session["nom"])
+		print(e)
+		return redirect(url_for("login"))	
 
 """
 	Gestiona Administradores - Menu
@@ -84,13 +104,14 @@ def adm1():
 		if(usr!=1):
 			return redirect(url_for("login"))
 		else:
-			pass
-
+			conexion = conecta_db("Proyecto.db")
+			numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+			return render_template('Adm1.html',nombrecito=session["nom"],numAlertas=numalertas[0])
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))
 
-	return render_template('Adm1.html',nombrecito=session["nom"])
 
 """
 	Gestiona Administradores - Form Agregar
@@ -117,9 +138,12 @@ def adm11():
 				return respuesta
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))
-
-	return render_template('Adm11.html',nombrecito=session["nom"])
+	
+	conexion = conecta_db("Proyecto.db")
+	numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+	return render_template('Adm11.html',nombrecito=session["nom"],numAlertas=numalertas[0])
 
 """
 	Gestiona Administradores - Tabla Busca
@@ -133,11 +157,12 @@ def adm12():
 			return redirect(url_for("login"))
 		else:
 			conexion = conecta_db("Proyecto.db")
-			respuesta = consulta_usur(conexion,1)
-			return render_template('Adm12.html',filas=respuesta,nombrecito=session["nom"])
-
+			respuesta = consulta_usur(conexion,1)			
+			numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+			return render_template('Adm12.html',filas=respuesta,nombrecito=session["nom"],numAlertas=numalertas[0])
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))	
 
 """
@@ -154,11 +179,12 @@ def adm121():
 			if request.method == 'POST':
 				usr=request.form['usr']
 				conexion = conecta_db("Proyecto.db")
-				respuesta = consulta_usur_esp(conexion,usr)
-				return render_template('Adm121.html',filas=respuesta,nombrecito=session["nom"])
-
+				respuesta = consulta_usur_esp(conexion,usr)				
+				numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+				return render_template('Adm121.html',filas=respuesta,nombrecito=session["nom"],numAlertas=numalertas[0])
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))	
 
 """
@@ -186,6 +212,7 @@ def adm122():
 				return respuesta
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))	
 
 
@@ -201,8 +228,9 @@ def adm13():
 			return redirect(url_for("login"))
 		else:
 			conexion = conecta_db("Proyecto.db")
-			respuesta = consulta_usur(conexion,1)
-			return render_template('Adm13.html',filas=respuesta,nombrecito=session["nom"])
+			respuesta = consulta_usur(conexion,1)			
+			numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+			return render_template('Adm13.html',filas=respuesta,nombrecito=session["nom"],numAlertas=numalertas[0])
 
 	except Exception as e:
 		return redirect(url_for("login"))	
@@ -229,7 +257,9 @@ def adm131():
 		return redirect(url_for("login"))
 
 
-
+"""
+	Gestiona Clientes - Menu
+"""
 @app.route('/adm2',methods = ['POST','GET'])
 def adm2():
 
@@ -240,12 +270,17 @@ def adm2():
 		else:
 			pass
 
-
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))
 
-	return render_template('Adm2.html',nombrecito=session["nom"])
+	conexion = conecta_db("Proyecto.db")
+	numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+	return render_template('Adm2.html',nombrecito=session["nom"],numAlertas=numalertas[0])
 
+"""
+	Gestiona Clientes - Agrega Usuario
+"""
 @app.route('/adm21',methods = ['POST','GET'])
 def adm21():
 
@@ -267,12 +302,17 @@ def adm21():
 				close_db(conexion)
 				return respuesta
 
-
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))
 
-	return render_template('Adm21.html',nombrecito=session["nom"])
+	conexion = conecta_db("Proyecto.db")
+	numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+	return render_template('Adm21.html',nombrecito=session["nom"],numAlertas=numalertas[0])
 
+"""
+	Gestiona Clientes - Busca clientes
+"""
 @app.route('/adm22',methods = ['POST','GET'])
 def adm22():
 
@@ -283,14 +323,16 @@ def adm22():
 		else:
 			conexion = conecta_db("Proyecto.db")
 			respuesta = consulta_usur(conexion,2)
-			return render_template('Adm22.html',filas=respuesta,nombrecito=session["nom"])
-
+			numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+			return render_template('Adm22.html',filas=respuesta,nombrecito=session["nom"],numAlertas=numalertas[0])
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))
 
-	return render_template('Adm22.html',nombrecito=session["nom"])
-
+"""
+	Gestiona Clientes - Form modifica Clientes
+"""
 @app.route('/adm221',methods = ['POST','GET'])
 def adm221():
 
@@ -303,9 +345,11 @@ def adm221():
 				usr=request.form['usr']
 				conexion = conecta_db("Proyecto.db")
 				respuesta = consulta_usur_esp(conexion,usr)
-				return render_template('Adm221.html',filas=respuesta,nombrecito=session["nom"])
+				numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+				return render_template('Adm221.html',filas=respuesta,nombrecito=session["nom"],numAlertas=numalertas[00])
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))	
 
 """
@@ -333,9 +377,12 @@ def adm222():
 				return respuesta
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))	
 
-
+"""
+	Gestiona Clientes - Form elimina Clientes
+"""
 @app.route('/adm23',methods = ['POST','GET'])
 def adm23():
 
@@ -346,29 +393,33 @@ def adm23():
 		else:
 			conexion = conecta_db("Proyecto.db")
 			respuesta = consulta_usur(conexion,2)
-			return render_template('Adm23.html',filas=respuesta,nombrecito=session["nom"])
+			numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+			return render_template('Adm23.html',filas=respuesta,nombrecito=session["nom"],numAlertas=numalertas[0])
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))	
 
+#  ------------------------------ Topologia ----------------------------
+# @app.route('/adm3',methods = ['POST','GET'])
+# def adm3():
 
-@app.route('/adm3',methods = ['POST','GET'])
-def adm3():
-
-	try:
-		usr = session["idTipoUsr"]
-		if(usr!=1):
-			return redirect(url_for("login"))
-		else:
-			pass
-
-
-	except Exception as e:
-		return redirect(url_for("login"))
-
-	return render_template('Adm3.html',nombrecito=session["nom"])
+# 	try:
+# 		usr = session["idTipoUsr"]
+# 		if(usr!=1):
+# 			return redirect(url_for("login"))
+# 		else:
+# 			pass
 
 
+# 	except Exception as e:
+# 		return redirect(url_for("login"))
+
+# 	return render_template('Adm3.html',nombrecito=session["nom"])
+
+"""
+	Dispositivos - Muestra dispositivos
+"""
 @app.route('/adm4',methods = ['POST','GET'])
 def adm4():
 
@@ -377,14 +428,20 @@ def adm4():
 		if(usr!=1):
 			return redirect(url_for("login"))
 		else:
-			pass
-
+			conexion = conecta_db("Proyecto.db")
+			respuesta = consulta_disp(conexion)
+			numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+			return render_template('Adm4.html',filas=respuesta,nombrecito=session["nom"],numAlertas=numalertas[0])
 
 	except Exception as e:
-		return redirect(url_for("login"))
+		print(e)
+		return redirect(url_for("login"))	
 
-	return render_template('Adm4.html',nombrecito=session["nom"])
 
+
+"""
+	Dispositivos - Dispositivos especifico
+"""
 @app.route('/adm41',methods = ['POST','GET'])
 def adm41():
 
@@ -393,15 +450,141 @@ def adm41():
 		if(usr!=1):
 			return redirect(url_for("login"))
 		else:
-			pass
-
+			if request.method == 'POST':
+				datos = list()
+				paque = list()
+				idDisp=request.form['idDisp']
+				conexion = conecta_db("Proyecto.db")
+				respuesta = consulta_disp_esp(conexion,idDisp)
+				for elemento in respuesta:
+					datos.append(elemento[0]) #idDisp
+					datos.append(elemento[1]) #nombre
+					datos.append(elemento[2]) #sistem
+					datos.append(elemento[3]) #locali
+					datos.append(elemento[4]) #encarg
+					datos.append(elemento[5]) #contac
+					datos.append(elemento[6]) #timeac
+					datos.append(elemento[7]) #timemo
+				respuesta = alertas_activas(conexion,elemento[0],session["email"])
+				datos.append(respuesta[0]) #datos[8] = edo_alertas				
+				historial = consulta_paquetes(conexion,idDisp)
+				for elemento in historial:					
+					paque.append(elemento)
+				grafica = consulta_paquete_esp(conexion,idDisp)				
+				numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+				close_db(conexion)
+				return render_template('Adm41.html',filas=datos,tablita=paque,grafiquita=grafica,nombrecito=session["nom"],email=session["email"],numAlertas=numalertas[0])
 
 	except Exception as e:
+		print(e)
+		return redirect(url_for("login"))	
+
+"""
+	Dispositivos - Gestiona alertas
+"""
+@app.route('/adm411',methods = ['POST','GET'])
+def adm411():
+
+	try:
+		usr = session["idTipoUsr"]
+		if(usr!=1):
+			return redirect(url_for("login"))
+		else:
+			if request.method == 'POST':
+				idDisp=request.form['idDisp']
+				email=request.form['email']
+				conexion = conecta_db("Proyecto.db")
+				respuesta = config_alertas(conexion,idDisp,email)
+				if(respuesta=="Alertas Desactivadas"):
+					# Desactiva notificaciones
+					pass
+				elif(respuesta=="Alertas Activadas"):
+					# activa notificaciones
+					pass
+				elif(respuesta=="Persona registrada para recibir notificaciones"):
+					# activa notificaciones
+					pass
+				# print(respuesta)
+				return respuesta
+
+	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))
 
-	return render_template('Adm41.html',nombrecito=session["nom"])
+"""
+	Dispositivos - Form Modifica Routers
+"""
+@app.route('/adm412',methods = ['POST','GET'])
+def adm412():
+
+	try:
+		usr = session["idTipoUsr"]
+		if(usr!=1):
+			return redirect(url_for("login"))
+		else:
+			if request.method == 'POST':
+				datos = list()
+				idDisp=request.form['idDisp']
+				nombre=request.form['nombre']
+				sistem=request.form['sistem']
+				locali=request.form['locali']
+				encarg=request.form['encarg']
+				contac=request.form['contac']
+				timeac=request.form['timeac']
+				timemo=request.form['timemo']
+				datos.append(idDisp)
+				datos.append(nombre)
+				datos.append(sistem)
+				datos.append(locali)
+				datos.append(encarg)
+				datos.append(contac)
+				datos.append(timeac)
+				datos.append(timemo)
+				conexion = conecta_db("Proyecto.db")
+				numalertas = cantidad_alertas_NoVistas(conexion,session["email"])
+				return render_template('Adm412.html',filas=datos,nombrecito=session["nom"],email=session["email"],numAlertas=numalertas[0])
+
+	except Exception as e:
+		print(e)
+		return redirect(url_for("login"))
+
+"""
+	Dispositivos - Metodo Modifica Routers
+"""
+@app.route('/adm413',methods = ['POST','GET'])
+def adm413():
+	try:
+		usr = session["idTipoUsr"]
+		if(usr!=1):
+			return redirect(url_for("login"))
+		else:
+			if request.method == 'POST':
+				datos = list()				
+				nombre=request.form['nombre'] #Este parametro no se modifica
+				sistem=request.form['sistem']
+				locali=request.form['locali']
+				encarg=request.form['encarg']
+				contac=request.form['contac']
+				idDisp=request.form['idDisp']
+				datos.append(sistem)
+				datos.append(locali)
+				datos.append(encarg)
+				datos.append(contac)
+				datos.append(idDisp) #El id va al final
+				conexion = conecta_db("Proyecto.db")
+				respuesta = modifica_disp(conexion,datos)
+				close_db(conexion)
+				# Poner Funcion que modifique estos parametros en el router 'nombre'
+				return respuesta
+
+	except Exception as e:
+		print(e)
+		return redirect(url_for("login"))
 
 
+"""
+	Dispositivos - Historial notificaciones
+"""
 @app.route('/adm5',methods = ['POST','GET'])
 def adm5():
 
@@ -410,13 +593,25 @@ def adm5():
 		if(usr!=1):
 			return redirect(url_for("login"))
 		else:
-			pass
+			dato = list()
+			conexion = conecta_db("Proyecto.db")
+			respuesta = (cantidad_alertas_NoVistas(conexion,session["email"]))[0]
+			numalertas = (cantidad_alertas(conexion,session["email"]))[0]
+			if(numalertas!=0):
+				alertas = consul_alertas(conexion,session["email"])
+				for i in alertas:
+					dato.append(i)
+			else:
+				alertas = None			
+		
+			print(set_alertas_visto(conexion,session["email"]))
+			return render_template('Adm5.html',nombrecito=session["nom"],Alertas=numalertas,numAlertas=respuesta,datitos=dato)
 
 
 	except Exception as e:
+		print(e)
 		return redirect(url_for("login"))
-
-	return render_template('Adm5.html',nombrecito=session["nom"])
+	
 
 # --------------------------------------------------------------------------------
 
@@ -518,4 +713,6 @@ if __name__ == '__main__':
 	conexion = conecta_db("Proyecto.db")
 	crea_tbs(conexion)
 	close_db(conexion)
+	# llamamos al snpm
+	# Guardamops los dispositovos en la BD
 	app.run(host='0.0.0.0',debug=True)
